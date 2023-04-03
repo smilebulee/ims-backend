@@ -6,7 +6,7 @@ openJDK 11
 
 Springboot 2.7.9
 
-    동일한 서버의 REACT 3000 번 포트에 대해 CORS 설정.
+    동일한 서버의 REACT 3001 번 포트에 대해 CORS 설정.
 
 jpa
 
