@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://218.151.225.142:3309/imsdbnew
+    url: jdbc:mariadb://112.220.26.195:3309/imsdbnew
     username: imsapp
     password: im5App!
   jpa:
