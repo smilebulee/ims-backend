@@ -214,6 +214,10 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
                 predicates.add(criteriaBuilder.between(root.get("reportDt"), params.getStartDt(), params.getEndDt()));
             }
 
+            if(params.getAuthCd().equals("USER")){
+                predicates.add(criteriaBuilder.equal(root.get("mailId"), params.getEmail()));
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
            

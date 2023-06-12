@@ -19,4 +19,7 @@ public class WeeklyReportParam {
     
     private Integer page;
     private Integer pageSize = 10;
+
+    private String authCd;
+    private String email;
 }

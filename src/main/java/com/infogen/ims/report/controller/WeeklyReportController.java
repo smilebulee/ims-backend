@@ -40,7 +40,9 @@ public class WeeklyReportController {
                                             , @RequestParam(required=false) String startDt
                                             , @RequestParam(required=false) String endDt 
                                             , @RequestParam(required=false, defaultValue="1") int page 
-                                            , @RequestParam(required=false, defaultValue="10") int pageSize ) throws Exception{
+                                            , @RequestParam(required=false, defaultValue="10") int pageSize
+                                            , @RequestParam(required=true) String authCd
+                                            , @RequestParam(required=true) String email) throws Exception{
         WeeklyReportParam param = WeeklyReportParam.builder()
             .upDeptNm(upDeptNm)
             .deptNm(deptNm)
@@ -50,7 +52,9 @@ public class WeeklyReportController {
             .startDt(startDt)
             .endDt(endDt)
             .page(page)
-            .pageSize(pageSize).build();
+            .pageSize(pageSize)
+            .authCd(authCd)
+            .email(email).build();
         
         System.out.println(param.toString());        
 
