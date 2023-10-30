@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,5 +60,15 @@ public class WeeklyReportController {
         System.out.println(param.toString());        
 
         return ResponseEntity.ok(wReportService.weelyReportList(param));
+    }
+
+    @PostMapping("/ims/report/weekly/save")
+    public String weeklyReportSave(@RequestBody WeeklyReportVo vo) throws Exception {
+        return wReportService.weeklyReportSave(vo) == 0 ? "저장 되었습니다." : "저장에 실패했습니다.";
+    }
+
+    @PostMapping("/ims/report/weekly/delete")
+    public String weeklyReportDelete(@RequestBody Map<String, List<Integer>> data) throws Exception {
+        return wReportService.weeklyReportDelete(data.get("seq")) == 0 ? "삭제 되었습니다." : "삭제에 실패했습니다.";
     }
 }

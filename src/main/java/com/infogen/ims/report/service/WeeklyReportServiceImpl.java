@@ -1,6 +1,5 @@
 package com.infogen.ims.report.service;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -221,6 +220,34 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
            
+    }
+
+    @Override
+    public int weeklyReportSave(WeeklyReportVo vo) throws Exception {
+        vo.setReportDt(vo.getReportDt());
+        vo.setMailId(vo.getMailId());
+       
+        if(vo.getSeq() == 0) {
+            vo.setSeq(wrRepository.findTopAllByOrderBySeqDesc().getSeq() + 1);
+        }
+
+        wrRepository.save(vo);
+        
+        return 0;
+    }
+
+    @Transactional
+    @Override
+    public int weeklyReportDelete(List<Integer> seq) throws Exception {
+        // 로그인 시 메일ID 하드코딩
+        String mailId = "test@test.com";
+        
+        for(Integer s : seq) {
+            wrRepository.deleteByMailIdAndSeq(mailId, s);
+        }
+
+
+        return 0;
     }
 
 }
