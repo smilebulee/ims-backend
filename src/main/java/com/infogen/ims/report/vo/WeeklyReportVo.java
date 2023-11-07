@@ -34,6 +34,7 @@ public class WeeklyReportVo {
     private String workDivs;
     private String titlNm;
     private String workPart;
+    private String workPlan;
     private String workInfo;
     private String schedStartDt;
     private String schedEndDt;
@@ -42,4 +43,5 @@ public class WeeklyReportVo {
     private String fnshDt;
     private String prgsHist;
     private String remarks;
+    private String uploadYn;
 }
