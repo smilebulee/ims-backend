@@ -1,13 +1,18 @@
 package com.infogen.ims.report.service;
 
 import java.io.InputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.net.URLEncoder;
 
+import org.apache.commons.io.FileUtils;
 import javax.persistence.criteria.Predicate;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -220,17 +225,37 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
            
     }
 
+    @Transactional
     @Override
-    public int weeklyReportSave(WeeklyReportVo vo) throws Exception {
-        vo.setReportDt(vo.getReportDt());
-        vo.setMailId(vo.getMailId());
-       
-        if(vo.getSeq() == 0) {
-            vo.setSeq(wrRepository.findTopAllByOrderBySeqDesc().getSeq() + 1);
-        }
+    public int weeklyReportSave(WeeklyReportVo vo, MultipartFile file) throws Exception {
+        int reportSeq = vo.getSeq() == 0 ? wrRepository.findTopAllByOrderBySeqDesc().getSeq() + 1 : vo.getSeq();
+        vo.setSeq(reportSeq);
 
         wrRepository.save(vo);
         
+        if(file != null) {
+            WeeklyReportFilesVo savedFile = wrfRepository.findByReportSeqAndReportDtAndMailId(vo.getSeq(), vo.getReportDt(), vo.getMailId());
+
+            String path = "/var/lib/jenkins/workspace/IMS-BACKEND/src/main/files/";
+            String fileName = UUID.randomUUID().toString() + "_" + vo.getReportDt() + "_" + file.getOriginalFilename();
+            String filePath = path + fileName;
+
+            if(savedFile != null) { // db에 저장된 데이터가 있는 경우 
+                if(!savedFile.getOriginalFileName().equals(file.getOriginalFilename())) {   // 저장된 데이터의 파일이름과 저장할 파일 이름이 다를 경우
+                    wrfRepository.deleteByReportSeqAndReportDtAndMailId(vo.getSeq(), vo.getReportDt(), vo.getMailId());
+
+                    file.transferTo(new File(filePath));
+
+                    wrfRepository.save(new WeeklyReportFilesVo(0, vo.getReportDt(), reportSeq, vo.getMailId(), file.getOriginalFilename(), fileName, path, file.getSize()));
+                }
+            }
+            else {
+                file.transferTo(new File(filePath));
+
+                wrfRepository.save(new WeeklyReportFilesVo(0, vo.getReportDt(), reportSeq, vo.getMailId(), file.getOriginalFilename(), fileName, path, file.getSize()));
+            }
+        }
+
         return 0;
     }
 
@@ -250,7 +275,43 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     }
 
     @Override
-    public WeeklyReportFilesVo weeklyReportFilesInfo(int idx) throws Exception {
-        return wrfRepository.findByIdx(idx);
+    public WeeklyReportFilesVo weeklyReportAttachList(int seq, String reportDt, String mailId) throws Exception {
+        return wrfRepository.findByReportSeqAndReportDtAndMailId(seq, reportDt, mailId);
+    }
+
+    @Transactional
+    @Override
+    public int weeklyReportDeleteAttach(int seq, String reportDt, String mailId) throws Exception {
+        wrfRepository.deleteByReportSeqAndReportDtAndMailId(seq, reportDt,mailId);
+
+        return 0;
+    }
+
+    // @Override
+    // public WeeklyReportFilesVo weeklyReportFilesInfo(int idx) throws Exception {
+    //     return wrfRepository.findByIdx(idx);
+    // }
+
+    @Override
+    public void weeklyReportDownloadFile(int seq, String reportDt, String mailId, HttpServletResponse response) throws Exception {
+        // Map<String, Object> fileInfo;
+
+        WeeklyReportFilesVo info = wrfRepository.findByReportSeqAndReportDtAndMailId(seq, reportDt, mailId);
+
+        String storedFullPath = info.getStoredFilePath() + info.getStoredFileName();
+        String originalFileName = info.getOriginalFileName();
+
+        byte fileByte[] = FileUtils.readFileToByteArray(new File(storedFullPath));
+
+        response.setContentType("application/octet-stream");
+        response.setContentLength(fileByte.length);
+
+        response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(originalFileName, "UTF-8")+"\";");
+        response.setHeader("Content-Transfer-Encoding", "binary");
+
+        response.getOutputStream().write(fileByte);
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
     }
 }

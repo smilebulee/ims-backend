@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,8 +68,8 @@ public class WeeklyReportController {
     }
 
     @PostMapping("/ims/report/weekly/save")
-    public String weeklyReportSave(@RequestBody WeeklyReportVo vo) throws Exception {
-        return wReportService.weeklyReportSave(vo) == 0 ? "저장 되었습니다." : "저장에 실패했습니다.";
+    public String weeklyReportSave(@RequestPart("data") WeeklyReportVo vo, @RequestPart(required = false) MultipartFile file) throws Exception {
+        return wReportService.weeklyReportSave(vo, file) == 0 ? "저장 되었습니다." : "저장에 실패했습니다.";
     }
 
     @PostMapping("/ims/report/weekly/delete")
@@ -104,27 +105,20 @@ public class WeeklyReportController {
         return wReportService.weeklyReportExcelList(param);
     }
 
+    @GetMapping("/ims/report/weekly/attachFileList")
+    public WeeklyReportFilesVo weeklyReportAttachList(int seq, String reportDt, String mailId) throws Exception {
+        return wReportService.weeklyReportAttachList(seq, reportDt, mailId);
+    }
+
+    @PostMapping("/ims/report/weekly/deleteAttachFile")
+    public int weeklyReportDeleteAttach(int seq, String reportDt, String mailId) throws Exception {
+        return wReportService.weeklyReportDeleteAttach(seq, reportDt, mailId);
+    }
+
     @GetMapping("/ims/report/weekly/download")
-    public void getMethodName(int idx, HttpServletResponse response) throws Exception {
-        // Map<String, Object> fileInfo;
-
-        WeeklyReportFilesVo info = wReportService.weeklyReportFilesInfo(idx);
-
-        String storedFullPath = info.getStoredFilePath() + info.getStoredFileName();
-        String originalFileName = info.getOriginalFileName();
-
-        byte fileByte[] = FileUtils.readFileToByteArray(new File(storedFullPath));
-
-        response.setContentType("application/octet-stream");
-        response.setContentLength(fileByte.length);
-
-        response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(originalFileName, "UTF-8")+"\";");
-        response.setHeader("Content-Transfer-Encoding", "binary");
-
-        response.getOutputStream().write(fileByte);
-        response.getOutputStream().flush();
-        response.getOutputStream().close();
-
+    public String weeklyReportDownloadFile(int seq, String reportDt, String mailId, HttpServletResponse response) throws Exception {
+        wReportService.weeklyReportDownloadFile(seq, reportDt, mailId, response);
+        return "success";
     }
     
 }

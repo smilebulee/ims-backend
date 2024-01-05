@@ -8,5 +8,6 @@ import com.infogen.ims.report.vo.WeeklyReportFilesVo;
 
 @Repository
 public interface WeeklyReportFilesRepository extends JpaRepository<WeeklyReportFilesVo, Integer> {
-    public WeeklyReportFilesVo findByIdx(int idx);
+    public WeeklyReportFilesVo findByReportSeqAndReportDtAndMailId(int seq, String reportDt, String mailId);
+    public int deleteByReportSeqAndReportDtAndMailId(int seq, String reportDt, String mailId);
 }

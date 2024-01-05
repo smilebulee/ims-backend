@@ -19,10 +19,10 @@ public class WeeklyReportFilesVo {
     private int idx;
 
     private String reportDt;
-    private int reportId;
+    private int reportSeq;
     private String mailId;
     private String originalFileName;
     private String storedFileName;
     private String storedFilePath;
-    private String fileSize;
+    private Long fileSize;
 }
