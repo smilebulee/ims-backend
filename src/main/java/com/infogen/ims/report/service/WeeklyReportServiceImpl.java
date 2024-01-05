@@ -264,7 +264,19 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     public int weeklyReportDelete(Map<String, List<WeeklyReportVo>> data) throws Exception {
         for(WeeklyReportVo vo : data.get("row")) {
             wrRepository.deleteByMailIdAndSeq(vo.getMailId(), vo.getSeq());
+
+            WeeklyReportFilesVo fileInfo = wrfRepository.findByReportSeqAndReportDtAndMailId(vo.getSeq(), vo.getReportDt(), vo.getMailId());
+            if(fileInfo != null) {
+                File file = new File(fileInfo.getStoredFilePath() + fileInfo.getStoredFileName());
+
+                if(file.exists()) {
+                    file.delete();
+                }
+
+                wrfRepository.deleteByReportSeqAndReportDtAndMailId(vo.getSeq(), vo.getReportDt(), vo.getMailId());
+            }
         }
+
 
         return 0;
     }
