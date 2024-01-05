@@ -282,8 +282,17 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     @Transactional
     @Override
     public int weeklyReportDeleteAttach(int seq, String reportDt, String mailId) throws Exception {
-        wrfRepository.deleteByReportSeqAndReportDtAndMailId(seq, reportDt,mailId);
 
+        WeeklyReportFilesVo fileInfo = wrfRepository.findByReportSeqAndReportDtAndMailId(seq, reportDt, mailId);
+
+        File file = new File(fileInfo.getStoredFilePath() + fileInfo.getStoredFileName());
+
+        if(file.exists()) {
+            file.delete();
+        }
+        
+        wrfRepository.deleteByReportSeqAndReportDtAndMailId(seq, reportDt,mailId);
+        
         return 0;
     }
 
