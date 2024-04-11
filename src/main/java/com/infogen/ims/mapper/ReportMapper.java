@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface ReportMapper {
-    List<Map<String, Object>> findAll();
+    List<Map<String, Object>> findAll(Map<String, Object> param);
 }
