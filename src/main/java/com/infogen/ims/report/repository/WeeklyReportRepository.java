@@ -15,4 +15,6 @@ import com.infogen.ims.report.vo.WeeklyReportVo;
 public interface WeeklyReportRepository extends JpaRepository<WeeklyReportVo, WeeklyReportId>, JpaSpecificationExecutor<WeeklyReportVo> {
     public int deleteByReportDtAndMailId(String reportDt, String mailId);
     public Page<WeeklyReportVo> findAll(Specification<WeeklyReportVo> spec, Pageable Pageable);
+    public int deleteByMailIdAndSeq(String mailId, int seq);
+    public WeeklyReportVo findTopAllByOrderBySeqDesc();
 }
