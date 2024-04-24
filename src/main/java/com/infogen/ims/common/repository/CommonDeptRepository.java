@@ -10,5 +10,5 @@ import com.infogen.ims.common.vo.DeptVo;
 
 @Repository
 public interface CommonDeptRepository extends JpaRepository<DeptVo, String>, JpaSpecificationExecutor<DeptVo> {
-    public List<DeptVo> findBydeptUseYn(String useYn);
+    public List<DeptVo> findBydeptUseYnOrderByDeptNameAsc(String useYn);
 }

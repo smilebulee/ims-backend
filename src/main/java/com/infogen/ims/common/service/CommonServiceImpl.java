@@ -25,7 +25,7 @@ public class CommonServiceImpl implements CommonService {
         Map<String, Object> ret = new HashMap<>();
 
         for(String cdGrp: cdGrpArr){
-            if(cdGrp.equals("DEPT")) ret.put(cdGrp, commmonDeptRepo.findBydeptUseYn("Y"));
+            if(cdGrp.equals("DEPT")) ret.put(cdGrp, commmonDeptRepo.findBydeptUseYnOrderByDeptNameAsc("Y"));
             else ret.put(cdGrp, commmonRepo.findByCdGrpOrderBySortOrdAsc(cdGrp));
         }
         
