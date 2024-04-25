@@ -1,22 +1,23 @@
 package com.infogen.ims.user.service;
 
-import java.util.Optional;
+import java.util.Collections;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import com.infogen.ims.user.jwt.JwtTokenProvider;
 import com.infogen.ims.user.repository.UserRepository;
-import com.infogen.ims.user.vo.Auth;
 import com.infogen.ims.user.vo.AuthRequestDto;
-import com.infogen.ims.user.vo.AuthResponse;
-import com.infogen.ims.user.vo.AuthUserDetails;
 import com.infogen.ims.user.vo.Member;
 import com.infogen.ims.user.vo.TokenDto;
 import lombok.extern.slf4j.Slf4j;
@@ -26,36 +27,23 @@ import lombok.RequiredArgsConstructor;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements UserDetailsService{
+
     private final UserRepository userRepository;
-   // private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
-
     private final AuthenticationManagerBuilder managerBuilder;
 
     public TokenDto login(AuthRequestDto requestDto) {
-        
-        // AuthUserDetails user = userRepository.loadUserByUserId(requestDto.getUserId()).orElseThrow(
-        //                 () -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다. username = " + requestDto.getUserId()));
-        //         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-        //             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다. username = " + requestDto.getUserId());
-        //         }
 
-       // Optional<Member> optionalUser  = userRepository.loadUserByUserId(requestDto.getUserId());
-        // if (optionalUser.isPresent()) {
-        //     Member member = optionalUser.get();
-        //     if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
-        //         throw new IllegalArgumentException("비밀번호가 일치하지 않습니다. username = " + requestDto.getUserId());
-        //      }
+        UserDetails user = userRepository.findByUserId(requestDto.getUserId())
+                                         .map(this::createUserDetails)
+                                         .orElseThrow(() -> new UsernameNotFoundException(requestDto.getUserId() + " : 해당 유저를 찾을 수 없습니다."));
 
-        //      UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다." );
+        }
 
-        //      return tokenProvider.generateTokenDto(authenticationToken.getPrincipal(), authenticationToken.getCredentials());
-        // } else {
-        //    throw new UsernameNotFoundException("해당 유저를 찾을 수 없습니다. username = " + requestDto.getUserId());
-        // }
-        
         UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
         log.info("authenticationToken : {}", authenticationToken);
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
@@ -63,38 +51,23 @@ public class AuthService {
        
     }
     
-    // /** 로그인 */
-    // @Transactional
-    // public AuthResponseDto login(AuthRequestDto param) {
-    //     // CHECK USERNAME AND PASSWORD
-    //     AuthUserDetails user = this.userRepository.loadUserByUserId(param.getUserId()).orElseThrow(
-    //             () -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다. username = " + param.getUserId()));
-    //     if (!passwordEncoder.matches(param.getPassword(), user.getPassword())) {
-    //         throw new IllegalArgumentException("비밀번호가 일치하지 않습니다. username = " + param.getUserId());
-    //     }
+    private UserDetails createUserDetails(Member member) {
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthGrpCd().toString());
+        return new User(
+                String.valueOf(member.getUserId()),
+                member.getPassword(),
+                Collections.singleton(grantedAuthority)
+        );
+    }
 
-    //     // GENERATE ACCESS_TOKEN AND REFRESH_TOKEN
-    //     String accessToken = this.jwtTokenProvider.generateAccessToken(
-    //             new UsernamePasswordAuthenticationToke(new CustomUserDetails(user), user.getPassword()));
-    //     String refreshToken = this.jwtTokenProvider.generateRefreshToken(
-    //             new UsernamePasswordAuthenticationToken(new CustomUserDetails(user), user.getPassword()));
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 
-    //     // CHECK IF AUTH ENTITY EXISTS, THEN UPDATE TOKEN
-    //     if (this.authRepository.existsByUser(user)) {
-    //         user.getAuth().updateAccessToken(accessToken);
-    //         user.getAuth().updateRefreshToken(refreshToken);
-    //         return new AuthResponseDto(user.getAuth());
-    //     }
-
-    //     // IF NOT EXISTS AUTH ENTITY, SAVE AUTH ENTITY AND TOKEN
-    //     Auth auth = this.authRepository.save(Auth.builder()
-    //                     .user(user)
-    //                     .tokenType("Bearer")
-    //                     .accessToken(accessToken)
-    //                     .refreshToken(refreshToken)
-    //                     .build());
-    //     return new AuthResponseDto(auth);
-    // }
+        System.out.println(">>loadUserByUsername"+ String.valueOf(userRepository.findByUserId(userId).get()));
+        return userRepository.findByUserId(userId)
+        .map(this::createUserDetails)
+        .orElseThrow(() -> new UsernameNotFoundException(userId + " 을 DB에서 찾을 수 없습니다"));
+    }
 
     // /** Token 갱신 */
     // @Transactional
