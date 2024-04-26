@@ -45,7 +45,7 @@ public class WebSecurityConfig {
         .and()
         .authorizeRequests()
         .antMatchers("/ims/auth/**").permitAll()
-        .antMatchers("/ims/**").authenticated()
+        // .antMatchers("/ims/**").authenticated()
       //  .anyRequest().authenticated()
 
         .and()
