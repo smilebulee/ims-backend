@@ -6,10 +6,13 @@ import java.util.Collections;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +34,9 @@ public class Member implements UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String userId;
 
-    private String authGrpCd;
+    @Enumerated(EnumType.STRING)
+    private Authority authGrpCd;
+
     private String deptCd;
     private String userNm;
     private String password;
@@ -39,6 +44,12 @@ public class Member implements UserDetails{
     private String email;
     private String joinDate;
     
+    @Transient
+    private String grantType;
+    @Transient
+    private String accessToken;
+    @Transient
+    private Long tokenExpiresIn;
 
     @Builder
     public Member(String userId, String password/*, Authority authority*/) {
@@ -51,6 +62,7 @@ public class Member implements UserDetails{
     public Collection<? extends GrantedAuthority> getAuthorities() {
        return Collections.emptyList();
     }
+    
     @Override
     public String getUsername() {
         return this.userNm;

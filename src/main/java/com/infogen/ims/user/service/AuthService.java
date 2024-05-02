@@ -34,21 +34,29 @@ public class AuthService implements UserDetailsService{
     private final JwtTokenProvider tokenProvider;
     private final AuthenticationManagerBuilder managerBuilder;
 
-    public TokenDto login(AuthRequestDto requestDto) {
+    public Member login(AuthRequestDto requestDto) {
+        TokenDto token = generateToken(requestDto);
+        Member member = userRepository.findByUserId(requestDto.getUserId()).get();
+        member.setAccessToken(token.getAccessToken());
+        member.setGrantType(token.getGrantType());
+        member.setTokenExpiresIn(token.getTokenExpiresIn());
+        return member;
+    }
+
+    public TokenDto generateToken(AuthRequestDto requestDto) {
 
         UserDetails user = userRepository.findByUserId(requestDto.getUserId())
                                          .map(this::createUserDetails)
                                          .orElseThrow(() -> new UsernameNotFoundException(requestDto.getUserId() + " : 해당 유저를 찾을 수 없습니다."));
-
+        System.out.println(">>>>" +user);
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다." );
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
         log.info("authenticationToken : {}", authenticationToken);
-        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
-        return tokenProvider.generateTokenDto(authentication);
-       
+        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken); 
+        return tokenProvider.generateTokenDto(authentication);     
     }
     
     private UserDetails createUserDetails(Member member) {

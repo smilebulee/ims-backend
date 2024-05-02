@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.infogen.ims.user.service.AuthService;
 import com.infogen.ims.user.vo.AuthRequestDto;
-
-import com.infogen.ims.user.vo.TokenDto;
+import com.infogen.ims.user.vo.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,9 +21,7 @@ public class AuthRestController {
     private final AuthService authService;
 
     @PostMapping("/ims/auth/login")
-    public ResponseEntity<TokenDto> login(@RequestBody AuthRequestDto requestDto) {  
-        System.out.println(requestDto);
-        System.out.println("login" + authService.login(requestDto).toString());
+    public ResponseEntity<Member> login(@RequestBody AuthRequestDto requestDto) {  
         return ResponseEntity.ok(authService.login(requestDto));
     }
 

@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.infogen.ims.user.vo.AuthUserDetails;
 import com.infogen.ims.user.vo.TokenDto;
 
 
@@ -56,10 +55,7 @@ public class JwtTokenProvider {
 
         long now = (new Date()).getTime();
 
-
         Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-
-        System.out.println(tokenExpiresIn);
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())

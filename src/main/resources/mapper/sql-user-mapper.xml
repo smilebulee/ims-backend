@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.infogen.ims.mapper.UserMapper">
+    <select id="findAll" resultType="map">
+        SELECT *
+          FROM TB_WEEKLY_REPORT
+    </select>
+    <insert id="insertEmp" parameterType="com.infogen.ims.common.CamelMap">
+        INSERT INTO TB_AUTH_USER (USER_ID, AUTH_GRP_CD, DEPT_CD, USER_NM, PASSWORD, USER_STATUS_CD, EMAIL, JOIN_DATE)
+        VALUES (#{userId}, '1', #{deptCd}, #{userNm}, #{password}, '1', #{email}, '2024-04-29')
+    </insert>
+</mapper>
