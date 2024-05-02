@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.infogen.ims.mapper.DeptMapper">
+    <select id="findAll" parameterType="com.infogen.ims.common.vo.DeptVo" resultType="com.infogen.ims.common.CamelMap">
+        SELECT  
+              B.DEPT_CD
+            , B.DEPT_NAME
+            , CASE WHEN B.EMP_GM = A.EMP_ID THEN A.EMP_NAME ELSE '' END AS EMP_GM
+            , C.EMP_NAME AS EMP_PR
+            , B.DEPT_USE_YN
+            , B.RMKS
+            , B.REG_DATE 
+            , B.REG_EMP_NO
+            , B.CHG_DATE
+            , B.CHG_EMP_NO 
+          FROM tb_emp_mgmt a
+         INNER JOIN tb_dept b 
+            ON a.EMP_ID = b.EMP_GM
+          LEFT JOIN tb_emp_mgmt c 
+            ON b.EMP_PR = c.EMP_ID
+         ORDER BY b.DEPT_CD
+    </select>
+
+    <insert id="insertDeptSave" parameterType="com.infogen.ims.common.vo.DeptVo" >
+        <selectKey keyProperty="deptCd" resultType="String" order="BEFORE">
+            SELECT COALESCE(MAX(DEPT_CD), 0) + 1
+              FROM TB_DEPT
+             WHERE 1 = 1
+               AND DEPT_CD NOT LIKE '9%'
+        </selectKey>
+        INSERT INTO TB_DEPT (
+            DEPT_CD,
+            DEPT_NAME,
+            EMP_PR,
+            EMP_GM,
+            DEPT_USE_YN,
+            RMKS,
+            REG_DATE,
+            REG_EMP_NO,
+            CHG_DATE,
+            CHG_EMP_NO
+        ) VALUES (
+            #{deptCd},
+            #{deptName},
+            #{empPr},
+            #{empGm},
+            #{deptUseYn},
+            #{rmks},
+            #{regDate},
+            #{regEmpNo},
+            #{chgDate},
+            #{chgEmpNo}
+        )
+    </insert>
+    <select id="deptSelect" parameterType="String" resultType="com.infogen.ims.common.CamelMap">
+        SELECT *
+          FROM TB_DEPT
+         WHERE 1=1 
+           AND DEPT_NAME like '%${deptName}%'
+    </select>
+</mapper>

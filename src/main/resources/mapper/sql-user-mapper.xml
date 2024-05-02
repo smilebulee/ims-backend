@@ -3,6 +3,14 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.infogen.ims.mapper.UserMapper">
+    <select id="userInfoSelect" parameterType="String" resultType="com.infogen.ims.common.CamelMap">
+        SELECT *
+          FROM TB_AUTH_USER A
+              ,TB_DEPT B
+         WHERE 1=1 
+           AND A.DEPT_CD = B.DEPT_CD
+           AND USER_NM like '%${userNm}%'
+    </select>    
     <select id="findAll" resultType="map">
         SELECT *
           FROM TB_WEEKLY_REPORT

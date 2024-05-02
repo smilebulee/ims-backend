@@ -20,13 +20,14 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+    
     @Autowired
     private UserMapper userMapper;
 
     @Transactional
     @Override
     public List<Member> userInfoSelect(String userNm) throws Exception {
-        return  userRepository.findByUserNm(userNm);
+        return  userMapper.userInfoSelect(userNm);
     }
 
     public List<Member> findAll() throws Exception {
