@@ -5,10 +5,8 @@
 <mapper namespace="com.infogen.ims.mapper.UserMapper">
     <select id="userInfoSelect" parameterType="String" resultType="com.infogen.ims.common.CamelMap">
         SELECT *
-          FROM TB_AUTH_USER A
-              ,TB_DEPT B
-         WHERE 1=1 
-           AND A.DEPT_CD = B.DEPT_CD
+          FROM TB_AUTH_USER
+         WHERE 1=1
            AND USER_NM like '%${userNm}%'
     </select>    
     <select id="findAll" resultType="map">

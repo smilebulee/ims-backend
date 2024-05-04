@@ -5,22 +5,26 @@
 <mapper namespace="com.infogen.ims.mapper.DeptMapper">
     <select id="findAll" parameterType="com.infogen.ims.common.vo.DeptVo" resultType="com.infogen.ims.common.CamelMap">
         SELECT  
-              B.DEPT_CD
-            , B.DEPT_NAME
-            , CASE WHEN B.EMP_GM = A.EMP_ID THEN A.EMP_NAME ELSE '' END AS EMP_GM
-            , C.EMP_NAME AS EMP_PR
-            , B.DEPT_USE_YN
-            , B.RMKS
-            , B.REG_DATE 
-            , B.REG_EMP_NO
-            , B.CHG_DATE
-            , B.CHG_EMP_NO 
-          FROM tb_emp_mgmt a
-         INNER JOIN tb_dept b 
-            ON a.EMP_ID = b.EMP_GM
-          LEFT JOIN tb_emp_mgmt c 
-            ON b.EMP_PR = c.EMP_ID
-         ORDER BY b.DEPT_CD
+              A.DEPT_CD
+            , A.DEPT_NAME
+            , CASE WHEN A.EMP_GM = C.USER_ID THEN C.USER_NM
+                   ELSE A.EMP_GM
+              END AS EMP_GM
+            , CASE WHEN A.EMP_PR = B.USER_ID THEN B.USER_NM
+                   ELSE A.EMP_PR
+              END AS EMP_PR
+            , A.DEPT_USE_YN
+            , A.RMKS
+            , A.REG_DATE 
+            , A.REG_EMP_NO
+            , A.CHG_DATE
+            , A.CHG_EMP_NO 
+          FROM TB_DEPT A
+          LEFT JOIN TB_AUTH_USER B 
+            ON A.DEPT_CD = B.DEPT_CD
+          LEFT JOIN tb_auth_user C 
+            ON A.EMP_GM = C.USER_ID
+         ORDER BY A.DEPT_CD 
     </select>
 
     <insert id="insertDeptSave" parameterType="com.infogen.ims.common.vo.DeptVo" >
@@ -55,9 +59,23 @@
         )
     </insert>
     <select id="deptSelect" parameterType="String" resultType="com.infogen.ims.common.CamelMap">
-        SELECT *
-          FROM TB_DEPT
-         WHERE 1=1 
-           AND DEPT_NAME like '%${deptName}%'
+        SELECT  
+              B.DEPT_CD
+            , B.DEPT_NAME
+            , CASE WHEN B.EMP_GM = A.USER_ID THEN A.USER_NM ELSE '' END AS EMP_GM
+            , C.USER_NM AS EMP_PR
+            , B.DEPT_USE_YN
+            , B.RMKS
+            , B.REG_DATE 
+            , B.REG_EMP_NO
+            , B.CHG_DATE
+            , B.CHG_EMP_NO 
+          FROM TB_AUTH_USER a
+         INNER JOIN TB_DEPT b 
+            ON a.USER_ID = b.EMP_GM
+          LEFT JOIN TB_AUTH_USER c 
+            ON b.EMP_PR = c.USER_ID
+         WHERE B.DEPT_NAME LIKE '%${deptName}%'
+         ORDER BY b.DEPT_CD
     </select>
 </mapper>
