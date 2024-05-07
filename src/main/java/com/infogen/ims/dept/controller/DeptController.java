@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,12 +31,12 @@ public class DeptController {
 
     @PostMapping("/ims/dept/save")
     public String insertDeptSave(@RequestBody DeptVo vo) throws Exception {
-        // data set
-        vo.setRegDate(LocalDate.now());
-        vo.setChgDate(LocalDate.now());
-        vo.setRegEmpNo("test");
-        vo.setChgEmpNo("test");
-        vo.setRmks(LocalDate.now() + "신규등록");
+        System.out.println("Controller Come Vo : "+ vo);
         return deptService.insertDeptSave(vo) == 1 ? "저장 되었습니다." : "저장에 실패했습니다.";
+    }
+
+    @PostMapping("/ims/dept/deptModify")
+    public ResponseEntity<String> deptModify(@RequestBody DeptVo vo) throws Exception {
+        return deptService.deptModify(vo);
     }
 }

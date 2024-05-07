@@ -1,16 +1,14 @@
 package com.infogen.ims.common.vo;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,10 +29,14 @@ public class DeptVo {
     private String empGm;
     private String rmks;
     private String deptUseYn;
+    
     @CreatedDate
+    @JsonFormat(pattern="yyyyMMdd")
     private LocalDate regDate;
     private String regEmpNo;
+    
     @LastModifiedDate
+    @JsonFormat(pattern="yyyyMMdd")
     private LocalDate chgDate;
     private String chgEmpNo;
 }
