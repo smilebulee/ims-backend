@@ -64,7 +64,7 @@ public class DeptServiceImpl implements DeptService{
                 }
                 t.setChgDate(LocalDate.now());
                 t.setChgEmpNo("test");
-                
+
                 deptRepository.save(t);
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
             } else {

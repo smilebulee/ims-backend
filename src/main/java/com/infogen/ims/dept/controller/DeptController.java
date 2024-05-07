@@ -31,12 +31,12 @@ public class DeptController {
 
     @PostMapping("/ims/dept/save")
     public String insertDeptSave(@RequestBody DeptVo vo) throws Exception {
-        System.out.println("Controller Come Vo : "+ vo);
         return deptService.insertDeptSave(vo) == 1 ? "저장 되었습니다." : "저장에 실패했습니다.";
     }
 
     @PostMapping("/ims/dept/deptModify")
     public ResponseEntity<String> deptModify(@RequestBody DeptVo vo) throws Exception {
+        System.out.println("VO : " + vo);
         return deptService.deptModify(vo);
     }
 }
