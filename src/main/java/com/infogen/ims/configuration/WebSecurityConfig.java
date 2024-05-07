@@ -27,7 +27,6 @@ public class WebSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return  PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        //return new Pbkdf2PasswordEncoder();
     }
     
     @Bean
@@ -45,7 +44,7 @@ public class WebSecurityConfig {
         .and()
         .authorizeRequests()
         .antMatchers("/ims/auth/**").permitAll()
-     //   .antMatchers("/ims/**").authenticated()
+      //  .antMatchers("/ims/**").authenticated()
       //  .anyRequest().authenticated()
 
         .and()
@@ -53,40 +52,5 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
-
-    // @Bean
-    // public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-    //     return httpSecurity.csrf(csrf ->csrf.disable())
-    //             .authorizeRequests(requests ->requests
-    //             // 관리자 관련 모든 요청에 대해 승인된 사용자 중 ADMIN 권한이 있는 사용자만 허용
-    //             .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
-    //             .antMatchers("/api/v2/admin/**").hasRole("ADMIN")
-    //             // 회원가입 및 로그인 관련 모든 요청에 대해 아무나 승인
-    //             .antMatchers("/api/v1/auth/**").permitAll()
-    //             .antMatchers("/api/v2/auth/**").permitAll()
-    //             // 중복체크 관련 모든 요청에 대해 아무나 허용
-    //             .antMatchers("/api/v1/user/check/**").permitAll()
-    //             .antMatchers("/api/v2/user/check/**").permitAll()
-    //             // 유저정보 관련 모든 요청에 대해 승인된 사용자만 허용
-    //             .antMatchers("/api/v1/user/**").authenticated()
-    //             .antMatchers("/api/v2/user/**").authenticated()
-    //             // 첨부파일 관련 GET 요청에 대해 아무나 승인
-    //             .antMatchers(HttpMethod.GET, "/api/v1/attachment/**").permitAll()
-    //             .antMatchers(HttpMethod.GET, "/api/v2/attachment/**").permitAll()
-    //             // 댓글 관련 GET 요청에 대해 아무나 승인
-    //             .antMatchers(HttpMethod.GET, "/api/v1/comment/**").permitAll()
-    //             .antMatchers(HttpMethod.GET, "/api/v2/comment/**").permitAll()
-    //             // 게시글 관련 GET 요청에 대해 아무나 승인
-    //             .antMatchers(HttpMethod.GET, "/api/v1/post/**").permitAll()
-    //             .antMatchers(HttpMethod.GET, "/api/v2/post/**").permitAll()
-    //             // 기타 모든 요청에 대해 승인된 사용자만 허용
-    //             .antMatchers("/api/v1/**").authenticated()
-    //             .antMatchers("/api/v2/**").authenticated())
-    //             .sessionManagement()
-    //             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-    //             .and()
-    //             .build();
-    // }
 
 }

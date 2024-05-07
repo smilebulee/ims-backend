@@ -25,15 +25,4 @@ public class AuthRestController {
         return ResponseEntity.ok(authService.login(requestDto));
     }
 
-    @GetMapping("/ims/auth/test")
-    public String test() {
-        return "a";
-    }
-
-    // /** 토큰갱신 API */
-    // @GetMapping("/ims/auth/refresh")
-    // public ResponseEntity<?> refreshToken(@RequestHeader("REFRESH_TOKEN") String refreshToken) {
-    //     String newAccessToken = this.authService.refreshToken(refreshToken);
-    //     return ResponseEntity.status(HttpStatus.OK).body(newAccessToken);
-    // }
 }

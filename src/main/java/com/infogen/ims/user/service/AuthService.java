@@ -48,7 +48,6 @@ public class AuthService implements UserDetailsService{
         UserDetails user = userRepository.findByUserId(requestDto.getUserId())
                                          .map(this::createUserDetails)
                                          .orElseThrow(() -> new UsernameNotFoundException(requestDto.getUserId() + " : 해당 유저를 찾을 수 없습니다."));
-        System.out.println(">>>>" +user);
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다." );
         }
@@ -70,30 +69,9 @@ public class AuthService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-
-        System.out.println(">>loadUserByUsername"+ String.valueOf(userRepository.findByUserId(userId).get()));
         return userRepository.findByUserId(userId)
         .map(this::createUserDetails)
         .orElseThrow(() -> new UsernameNotFoundException(userId + " 을 DB에서 찾을 수 없습니다"));
     }
 
-    // /** Token 갱신 */
-    // @Transactional
-    // public String refreshToken(String refreshToken) {
-    //     // CHECK IF REFRESH_TOKEN EXPIRATION AVAILABLE, UPDATE ACCESS_TOKEN AND RETURN
-    //     if (this.jwtTokenProvider.validateToken(refreshToken)) {
-    //         Auth auth = this.authRepository.findByRefreshToken(refreshToken).orElseThrow(
-    //                 () -> new IllegalArgumentException("해당 REFRESH_TOKEN 을 찾을 수 없습니다.\nREFRESH_TOKEN = " + refreshToken));
-
-    //         String newAccessToken = this.jwtTokenProvider.generateAccessToken(
-    //                 new UsernamePasswordAuthenticationToken(
-    //                         new CustomUserDetails(auth.getUser()), auth.getUser().getPassword()));
-    //         auth.updateAccessToken(newAccessToken);
-    //         return newAccessToken;
-    //     }
-
-    //     // IF NOT AVAILABLE REFRESH_TOKEN EXPIRATION, REGENERATE ACCESS_TOKEN AND REFRESH_TOKEN
-    //     // IN THIS CASE, USER HAVE TO LOGIN AGAIN, SO REGENERATE IS NOT APPROPRIATE
-    //     return null;
-    // }
 }

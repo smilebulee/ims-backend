@@ -9,12 +9,4 @@
          WHERE 1=1
            AND USER_NM like '%${userNm}%'
     </select>    
-    <select id="findAll" resultType="map">
-        SELECT *
-          FROM TB_WEEKLY_REPORT
-    </select>
-    <insert id="insertEmp" parameterType="com.infogen.ims.common.CamelMap">
-        INSERT INTO TB_AUTH_USER (USER_ID, AUTH_GRP_CD, DEPT_CD, USER_NM, PASSWORD, USER_STATUS_CD, EMAIL, JOIN_DATE)
-        VALUES (#{userId}, '1', #{deptCd}, #{userNm}, #{password}, '1', #{email}, '2024-04-29')
-    </insert>
 </mapper>

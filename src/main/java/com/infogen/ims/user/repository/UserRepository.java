@@ -13,10 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Repository
 public interface UserRepository extends JpaRepository<Member, String>{
-    //public UserDetails loadUserByUsername(String userId);
     Optional<Member> findByUserId(String userId); 
-    List<Member> findAll(); 
-    List<Member> findByUserNm(String userNm); 
-    int deleteByUserId(String userId);
 }
  
