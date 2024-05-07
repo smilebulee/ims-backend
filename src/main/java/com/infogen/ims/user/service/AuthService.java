@@ -32,7 +32,6 @@ public class AuthService implements UserDetailsService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
-    private final AuthenticationManagerBuilder managerBuilder;
 
     public Member login(AuthRequestDto requestDto) {
         TokenDto token = generateToken(requestDto);
@@ -52,10 +51,8 @@ public class AuthService implements UserDetailsService{
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다." );
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
-        log.info("authenticationToken : {}", authenticationToken);
-        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken); 
-        return tokenProvider.generateTokenDto(authentication);     
+        return tokenProvider.generateTokenDto(); 
+            
     }
     
     private UserDetails createUserDetails(Member member) {
