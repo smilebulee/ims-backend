@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.infogen.ims.mapper.EmpMapper">
+    <select id="findAll" parameterType="com.infogen.ims.emp.vo.EmpVo" resultType="com.infogen.ims.common.CamelMap">
+        SELECT 
+            A.*,
+            B.DEPT_NAME,
+            C.CD_NM
+        FROM 
+            tb_auth_user AS A
+            INNER JOIN tb_dept AS B ON A.DEPT_CD = B.DEPT_CD
+            INNER JOIN tb_cmm_cd AS C ON A.USER_STATUS_CD = C.SORT_ORD
+        WHERE 
+            C.CD_GRP = 'USER_STATUS_CD'
+        order by
+        	A.USER_NM
+        ;
+    </select>
+    
+    <select id="findByUserNm" parameterType="String" resultType="com.infogen.ims.common.CamelMap">
+        SELECT 
+            A.USER_ID,
+            A.USER_NM,
+            A.AUTH_GRP_CD,
+            B.DEPT_NAME,
+            C.CD_NM
+        FROM 
+            tb_auth_user AS A
+            INNER JOIN tb_dept AS B ON A.DEPT_CD = B.DEPT_CD
+            INNER JOIN tb_cmm_cd AS C ON A.USER_STATUS_CD = C.SORT_ORD
+        WHERE 
+            C.CD_GRP = 'USER_STATUS_CD'
+            and A.USER_NM LIKE '%${userNm}%';
+    </select>
+
+    <insert id="insertEmp" parameterType="com.infogen.ims.emp.vo.EmpVo">
+        INSERT INTO tb_auth_user (
+			 USER_ID
+			,PASSWORD
+			,USER_NM
+			,JOB_STRT_TM
+			,JOB_END_TM
+			,AUTH_GRP_CD
+			,DEPT_CD
+			,SELF_PR_YN 
+            ,USER_STATUS_CD
+            ,EMAIL
+            ,JOIN_DATE
+            ,RTR_DATE
+            ,EMP_GM
+            ,EMP_PR
+            ,REG_DATE
+            ,REG_USER
+            ,UPD_DATE
+            ,UPD_USER
+        ) VALUES (
+	      	#{userId}
+	       ,#{password}
+	       ,#{userNm}
+	       ,#{jobStrtTm}
+           ,#{jobEndTm}
+           ,#{authGrpCd}
+	       ,(SELECT DEPT_CD FROM tb_dept where DEPT_NAME = #{deptName})
+	       ,#{selfPrYn}
+           ,'2'
+           ,#{userId}
+           ,CURRENT_DATE()
+           ,''
+           ,(SELECT EMP_GM FROM tb_dept where DEPT_NAME = #{deptName})
+           ,(SELECT EMP_PR FROM tb_dept where DEPT_NAME = #{deptName})
+           ,CURRENT_DATE()
+           ,#{regUser}
+           ,CURRENT_DATE()
+           ,#{regUser}
+        );
+    </insert>
+    
+    <update id="modifyEmp" parameterType="String">
+            UPDATE tb_auth_user
+               SET EMP_GM = (SELECT EMP_GM FROM tb_dept WHERE DEPT_CD = #{deptCd})
+                  ,EMP_PR = (SELECT EMP_PR FROM tb_dept WHERE DEPT_CD = #{deptCd})
+            WHERE USER_ID = #{userId};
+    </update>
+    
+    <!--
+    <insert id="insertEmp" parameterType="com.infogen.ims.emp.vo.EmpVo">
+        INSERT INTO tb_auth_user (
+			 USER_ID
+			,PASSWORD
+			,USER_NM
+			,JOB_STRT_TM
+			,JOB_END_TM
+			,AUTH_GRP_CD
+			,DEPT_CD
+			,SELF_PR_YN
+            ,USER_STATUS_CD
+            ,EMAIL
+            ,RTR_DATE
+            ,EMP_GM
+            ,EMP_PR
+            ,REG_USER
+        ) VALUES (
+	      	#{userId}
+	       ,#{password}
+	       ,#{userNm}
+	       ,#{jobStrtTm}
+           ,#{jobEndTm}
+           ,#{authGrpCd}
+	       ,(SELECT DEPT_CD FROM tb_dept where DEPT_NAME = #{deptName})
+	       ,#{selfPrYn}
+           ,'2'
+           ,#{userId}
+           ,''
+           ,(SELECT EMP_GM FROM tb_dept where DEPT_NAME = #{deptName})
+           ,(SELECT EMP_PR FROM tb_dept where DEPT_NAME = #{deptName})
+           ,#{regUser}
+        );
+    </insert>
+    -->
+</mapper>
