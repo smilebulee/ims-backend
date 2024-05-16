@@ -48,13 +48,13 @@ public class EmpController {
     }
 
     // Id 중복확인
-    @GetMapping("/check-userId/userId")
+    @GetMapping("/check-userId/{userId}")
     public boolean isUserIdUnique(@PathVariable String userId) throws Exception {
         return empService.isUserIdUnique(userId);
     }
 
     // 이름 중복확인
-    @GetMapping("/check-userNm/userNm")
+    @GetMapping("/check-userNm/{userNm}")
     public boolean isUserNmUnique(@PathVariable String userNm) throws Exception {
         return empService.isUserNmUnique(userNm);
     }

@@ -62,14 +62,14 @@
 	       ,#{jobStrtTm}
            ,#{jobEndTm}
            ,#{authGrpCd}
-	       ,(SELECT DEPT_CD FROM tb_dept where DEPT_NAME = #{deptName})
+	       ,#{deptCd}
 	       ,#{selfPrYn}
            ,'2'
            ,#{userId}
            ,CURRENT_DATE()
            ,''
-           ,(SELECT EMP_GM FROM tb_dept where DEPT_NAME = #{deptName})
-           ,(SELECT EMP_PR FROM tb_dept where DEPT_NAME = #{deptName})
+           ,(SELECT EMP_GM FROM tb_dept where DEPT_CD = #{deptCd})
+           ,(SELECT EMP_PR FROM tb_dept where DEPT_CD = #{deptCd})
            ,CURRENT_DATE()
            ,#{regUser}
            ,CURRENT_DATE()

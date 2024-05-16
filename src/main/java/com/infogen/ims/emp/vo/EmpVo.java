@@ -64,15 +64,15 @@ public class EmpVo {
     private String empPr; // 현장대리인
 
     @CreatedDate
-    private LocalDate regDate = LocalDate.now(); // 등록날짜
+    private LocalDate regDate; // 등록날짜
     private String regUser; // 등록직원
 
     @CreatedDate
-    private LocalDate updDate = LocalDate.now() ; // 수정날짜
+    private LocalDate updDate; // 수정날짜
     private String updUser; // 수정직원
 
-    private LocalTime jobStrtTm; // 정규업무시작시간
-    private LocalTime jobEndTm; // 정규업무종료시간
+    private String jobStrtTm; // 정규업무시작시간
+    private String jobEndTm; // 정규업무종료시간
 
     private String selfPrYn; // 셀프승인여부
 
