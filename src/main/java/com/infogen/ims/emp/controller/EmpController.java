@@ -31,13 +31,13 @@ public class EmpController {
     }
 
     // 직원명으로 검색할 시 결과 조회
-    @GetMapping("/{userNm}")
-    public List<EmpVo> findByUserNm(@PathVariable(name = "userNm") String userNm) throws Exception{
+    @GetMapping("/userNm")
+    public List<EmpVo> findByUserNm(@RequestParam String userNm) throws Exception{
         return empService.findByUserNm(userNm);
     }
 
     // 직원 정보 삭제
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/userId")
     public ResponseEntity<String> deleteEmployee(@PathVariable String userId) throws Exception {
         String result = empService.deleteEmployee(userId);
         if (result.startsWith("Employee with ID")) {
@@ -48,13 +48,13 @@ public class EmpController {
     }
 
     // Id 중복확인
-    @GetMapping("/check-userId/{userId}")
+    @GetMapping("/check-userId/userId")
     public boolean isUserIdUnique(@PathVariable String userId) throws Exception {
         return empService.isUserIdUnique(userId);
     }
 
     // 이름 중복확인
-    @GetMapping("/check-userNm/{userNm}")
+    @GetMapping("/check-userNm/userNm")
     public boolean isUserNmUnique(@PathVariable String userNm) throws Exception {
         return empService.isUserNmUnique(userNm);
     }
