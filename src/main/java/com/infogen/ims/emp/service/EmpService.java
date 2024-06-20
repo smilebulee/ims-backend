@@ -11,7 +11,7 @@ import com.infogen.ims.emp.vo.EmpVo;
 @Service
 public interface EmpService {
     
-     // onload 시 직원 리스트 조회, 상세팝업 띄웠을 시 직원 정보 조회
+    // onload 시 직원 리스트 조회, 상세팝업 띄웠을 시 직원 정보 조회
     public List<EmpVo> findAll();
 
     // 직원명으로 검색할 시 결과 조회

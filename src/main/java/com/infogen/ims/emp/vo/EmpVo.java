@@ -2,19 +2,14 @@ package com.infogen.ims.emp.vo;
 
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,7 +70,5 @@ public class EmpVo {
     private String jobEndTm; // 정규업무종료시간
 
     private String selfPrYn; // 셀프승인여부
-
-    //private String deptName; // 부서명
 
 }

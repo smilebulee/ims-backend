@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.infogen.ims.common.vo.DeptVo;
-import com.infogen.ims.emp.repository.EmpRepository;
 import com.infogen.ims.emp.service.EmpService;
 import com.infogen.ims.emp.vo.EmpVo;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +18,6 @@ public class EmpController {
     
     @Autowired
     private EmpService empService;
-
-    @Autowired
-    private EmpRepository empRepository;
 
     // onload 시 직원 리스트 조회, 상세팝업 띄웠을 시 직원 정보 조회
     @GetMapping("/findAll")
@@ -37,7 +32,7 @@ public class EmpController {
     }
 
     // 직원 정보 삭제
-    @DeleteMapping("/userId")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteEmployee(@PathVariable String userId) throws Exception {
         String result = empService.deleteEmployee(userId);
         if (result.startsWith("Employee with ID")) {

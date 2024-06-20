@@ -1,6 +1,7 @@
 package com.infogen.ims.emp.service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,13 +72,12 @@ public class EmpServiceImpl implements EmpService{
 
     // 직원 수정
     @Override
-    @Transactional
     public ResponseEntity<String> modifyEmp(EmpVo empVo) {
         try {
             Optional<EmpVo> entity = empRepository.findById(empVo.getUserId());
             
             if(entity.isPresent()) {
-                EmpVo emp = entity.get();
+                EmpVo emp = entity.get();                
 
                 // 직원ID, 이메일
                 if(empVo.getUserId() != null) {
@@ -112,15 +112,22 @@ public class EmpServiceImpl implements EmpService{
 
                 // 부서코드
                 if(empVo.getDeptCd() != null) {
-                    emp.setDeptCd(empVo.getDeptCd());
 
-                    // 사업부장, 현장대리인 update
-                    empMapper.modifyEmp(empVo.getUserId(), empVo.getDeptCd());
+                    String deptCd = empVo.getDeptCd();
+                    emp.setDeptCd(deptCd);
+
+                    // 사업부장, 현장대리인
+
                 }
 
                 // 셀프승인
                 if(empVo.getSelfPrYn() != null) {
                     emp.setSelfPrYn(empVo.getSelfPrYn());
+                }
+
+                // 재직/퇴직
+                if(empVo.getUserStatusCd() != null) {
+                    emp.setUserStatusCd(empVo.getUserStatusCd());
                 }
 
                 // 재직여부를 'N'으로 변경
