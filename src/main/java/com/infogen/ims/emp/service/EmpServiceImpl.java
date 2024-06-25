@@ -77,7 +77,7 @@ public class EmpServiceImpl implements EmpService{
             Optional<EmpVo> entity = empRepository.findById(empVo.getUserId());
             
             if(entity.isPresent()) {
-                EmpVo emp = entity.get();                
+                EmpVo emp = entity.get();
 
                 // 직원ID, 이메일
                 if(empVo.getUserId() != null) {
@@ -112,12 +112,11 @@ public class EmpServiceImpl implements EmpService{
 
                 // 부서코드
                 if(empVo.getDeptCd() != null) {
-
-                    String deptCd = empVo.getDeptCd();
+                    String deptCd = empVo.getDeptCd(); // 부서코드
+                    
                     emp.setDeptCd(deptCd);
-
-                    // 사업부장, 현장대리인
-
+                    emp.setEmpGm(empMapper.findEmpGm(deptCd)); // 사업부장
+                    emp.setEmpPr(empMapper.findEmpPr(deptCd)); // 현장대리인
                 }
 
                 // 셀프승인

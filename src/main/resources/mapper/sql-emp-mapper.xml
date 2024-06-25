@@ -76,4 +76,13 @@
            ,#{regUser}
         );
     </insert>
+
+    <select id="findEmpGm" parameterType="String" resultType="String">
+        SELECT EMP_GM FROM tb_dept where DEPT_CD = #{deptCd} 
+    </select>
+
+    <select id="findEmpPr" parameterType="String" resultType="String">
+        SELECT EMP_PR FROM tb_dept where DEPT_CD = #{deptCd} 
+    </select>
+
 </mapper>

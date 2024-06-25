@@ -17,4 +17,10 @@ public interface EmpMapper {
 
     // 직원 등록
     void insertEmp(EmpVo empVo);
+
+    // 사업부장 조회
+    public String findEmpGm(String deptCd);
+
+    // 현장대리인 조회
+    public String findEmpPr(String deptCd);
 }
